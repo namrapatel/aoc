@@ -29,7 +29,7 @@ func containsLetterNumber(s string) (bool, int) {
 	return false, 0
 }
 
-func getFirstDigit(s string) int {
+func getFirstDigitIncludingLetters(s string) int {
 	for i := 0; i < len(s); i++ {
 		if found, d := containsLetterNumber(s[:i]); found {
 			return d
@@ -40,7 +40,7 @@ func getFirstDigit(s string) int {
 	panic("no digit found in " + s)
 }
 
-func getSecondDigit(s string) int {
+func getSecondDigitIncludingLetters(s string) int {
 	for i := len(s) - 1; i >= 0; i-- {
 		if found, d := containsLetterNumber(s[i:]); found {
 			return d
@@ -51,7 +51,7 @@ func getSecondDigit(s string) int {
 	panic("no digit found in " + s)
 }
 
-func getNumbersIncludingLetters(name string) int {
+func getSumIncludingLetters(name string) int {
 	sum := 0
 
 	inputFile, err := os.Open(name)
@@ -67,13 +67,12 @@ func getNumbersIncludingLetters(name string) int {
 	}(inputFile)
 
 	scanner := bufio.NewScanner(inputFile)
-
 	for scanner.Scan() {
 		line := scanner.Text()
 		combined := 0
 
-		combined = getFirstDigit(line)
-		secondDigit := getSecondDigit(line)
+		combined = getFirstDigitIncludingLetters(line)
+		secondDigit := getSecondDigitIncludingLetters(line)
 		combined = combined*10 + secondDigit
 		sum += combined
 	}
