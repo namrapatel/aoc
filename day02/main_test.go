@@ -6,8 +6,8 @@ import (
 )
 
 func TestActual(t *testing.T) {
-	expectedSum, expectedPower := 1853, 72706
-	actualSum, actualPower := getSumOfIdsOfValidGames("input.txt")
+	expectedSum, expectedPower := 8, 2286
+	actualSum, actualPower := getSumOfIdsOfValidGames("test_input.txt")
 	assert.Equal(t, expectedSum, actualSum)
 	assert.Equal(t, expectedPower, actualPower)
 }
