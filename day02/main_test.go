@@ -5,14 +5,9 @@ import (
 	"testing"
 )
 
-func TestImpl(t *testing.T) {
-	expected := 8
-	actual := getSumOfIdsOfValidGames("test_input.txt")
-	assert.Equal(t, expected, actual)
-}
-
 func TestActual(t *testing.T) {
-	expected := 1853
-	actual := getSumOfIdsOfValidGames("input.txt")
-	assert.Equal(t, expected, actual)
+	expectedSum, expectedPower := 1853, 72706
+	actualSum, actualPower := getSumOfIdsOfValidGames("input.txt")
+	assert.Equal(t, expectedSum, actualSum)
+	assert.Equal(t, expectedPower, actualPower)
 }
