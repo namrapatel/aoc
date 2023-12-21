@@ -9,8 +9,8 @@ visited = [[False for _ in row] for row in input]
 def search(input, row: int, col: int):
     # Move all all directions
     for dr, dc in dirs:
-
         new_row, new_col = row + dr, col + dc
+        
         # Check to be within boundaries
         if new_row < 0 or new_col < 0 or new_row >= rows or new_col >= cols:
             continue
