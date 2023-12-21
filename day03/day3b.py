@@ -3,7 +3,7 @@ with open("input.txt", "r") as file:
 
 dirs = [[0,1],[1,0],[-1,0],[0,-1],[1,-1],[-1,1],[1,1],[-1,-1]]
 rows, cols = len(input), len(input[0])
-visited = [[False for _ in row] for row in input]
+visited = set() 
 
 
 def search(input, row: int, col: int):
@@ -19,7 +19,7 @@ def search(input, row: int, col: int):
 
         # If char at next position is a number, grab the full number and append
         next = input[new_row][new_col]
-        if next.isdigit() and (visited[new_row][new_col] == False): 
+        if next.isdigit() and ((new_row, new_col) not in visited): 
             full_num = grab_full_num(input, new_row, new_col)
             nums.append(full_num)
             num_found += 1
@@ -38,7 +38,7 @@ def grab_full_num(input, row: int, col: int):
     full_num = ""
     while col < cols and (input[row][col].isdigit()):
         full_num = full_num + input[row][col]
-        visited[row][col] = True
+        visited.add((row, col)) 
         col += 1
     return full_num
 
