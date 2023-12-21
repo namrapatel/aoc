@@ -1,50 +1,30 @@
-with open("input.txt", "r") as file:
-    input = [line.strip() for line in file]
-
+grid = open("input.txt").read().splitlines()
+starting_coords = set()
+rows, cols = len(grid), len(grid[0])
 dirs = [[0,1],[1,0],[-1,0],[0,-1],[1,-1],[-1,1],[1,1],[-1,-1]]
-rows, cols = len(input), len(input[0])
-visited = set() 
 
-
-def search(input, row: int, col: int):
-    # Move all all directions
-    for dr, dc in dirs:
-        new_row, new_col = row + dr, col + dc
-
-        # Check to be within boundaries
-        if new_row < 0 or new_col < 0 or new_row >= rows or new_col >= cols:
+for r, row in enumerate(grid):
+    for c, char in enumerate(row):
+        if char.isdigit() or char == ".":
             continue
+        # found a symbol, move all in dirs to find a number
+        for dr, dc in dirs:
+            new_row, new_col = r+dr, c+dc
+            if new_row < 0 or new_col < 0 or new_row >= rows or new_col >= cols or not grid[new_row][new_col].isdigit():
+                continue
+            # found a number, move to it's first index
+            while new_col > 0 and grid[new_row][new_col-1].isdigit():
+                new_col -= 1
+            # found starting index, add to set
+            starting_coords.add((new_row, new_col))
 
-        # If char at next dir is symbol mark origin as visited and return True
-        next = input[new_row][new_col]
-        if not (next.isdigit()) and not (next == '.'):
-            visited.add((row, col))
-            return True
+# get the full number, add to list of numbers and sum
+numbers = []
+for r, c in starting_coords:
+    number = ""
+    while c < cols and grid[r][c].isdigit():
+        number += grid[r][c]
+        c += 1
+    numbers.append(int(number))
 
-    return False
-            
-            
-def grab_full_num(input, row: int, col: int, currNum: str):
-    while col + 1 < cols and (input[row][col+1].isdigit()):
-        currNum = currNum + input[row][col+1]
-        visited.add((row, col+1))
-        col += 1
-    return currNum
-
-
-sum = 0
-currNum = ""
-for row in range(rows):
-    for col in range(cols):
-        curr = input[row][col]
-        if curr.isdigit() and ((row, col) not in visited):
-            currNum = currNum + curr
-            if search(input, row, col):
-                num = grab_full_num(input, row, col, currNum)
-                sum = sum + int(num)
-                currNum = ""
-            elif col + 1 >= cols or not (input[row][col+1].isdigit()) or ((row, col+1) in visited):
-                currNum = ""
-
-
-print(sum)
+print(sum(numbers))

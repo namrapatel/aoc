@@ -1,57 +1,38 @@
-with open("input.txt", "r") as file:
-    input = [line.strip() for line in file]
-
+grid = open("input.txt").read().splitlines()
+rows, cols = len(grid), len(grid[0])
 dirs = [[0,1],[1,0],[-1,0],[0,-1],[1,-1],[-1,1],[1,1],[-1,-1]]
-rows, cols = len(input), len(input[0])
-visited = set() 
+total = 0
 
-
-def search(input, row: int, col: int):
-    num_found = 0
-    nums = []
-    # Move all all directions
-    for dr, dc in dirs:
-        new_row, new_col = row + dr, col + dc
-        
-        # Check to be within boundaries
-        if new_row < 0 or new_col < 0 or new_row >= rows or new_col >= cols:
+for r, row in enumerate(grid):
+    for c, char in enumerate(row):
+        if char != "*":
             continue
 
-        # If char at next position is a number, grab the full number and append
-        next = input[new_row][new_col]
-        if next.isdigit() and ((new_row, new_col) not in visited): 
-            full_num = grab_full_num(input, new_row, new_col)
-            nums.append(full_num)
-            num_found += 1
-            if num_found == 2:
-                return True, nums
+        starting_coords = set()
 
-    return False, nums
-            
-            
-def grab_full_num(input, row: int, col: int):
-    # Move to the front of the number
-    while col > 0 and input[row][col-1].isdigit():
-        col -= 1
+        # found an asterisk, move all in dirs to find a number
+        for dr, dc in dirs:
+            new_row, new_col = r+dr, c+dc
+            if new_row < 0 or new_col < 0 or new_row >= rows or new_col >= cols or not grid[new_row][new_col].isdigit():
+                continue
+            # found a number, move to it's first index
+            while new_col > 0 and grid[new_row][new_col-1].isdigit():
+                new_col -= 1
+            # found starting index, add to set
+            starting_coords.add((new_row, new_col))
 
-    # Build the full number from the front and return
-    full_num = ""
-    while col < cols and (input[row][col].isdigit()):
-        full_num = full_num + input[row][col]
-        visited.add((row, col)) 
-        col += 1
-    return full_num
+       # ignore if 2 numbers were not found 
+        if len(starting_coords) != 2:
+            continue
 
+        # get the full number, multiply and add to total
+        numbers = []
+        for cr, cc in starting_coords:
+            number = ""
+            while cc < cols and grid[cr][cc].isdigit():
+                number += grid[cr][cc]
+                cc += 1
+            numbers.append(int(number))
 
-sum = 0
-currNum = ""
-for row in range(rows):
-    for col in range(cols):
-        curr = input[row][col]
-        if curr == '*':
-            valid, nums = search(input, row, col)
-            if valid:
-                new_sum = int(nums[0]) * int(nums[1])
-                sum += new_sum
-
-print(sum)
+        total += numbers[0] * numbers[1]
+print(total)
