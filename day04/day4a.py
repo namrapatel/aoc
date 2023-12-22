@@ -1,26 +1,15 @@
-sum = 0
+total = 0
+for x in open("test_input.txt"):
+    # Remove "Card X:" prefix and strip whitespace
+    x = x.split(":")[1].strip()
 
-with open("input.txt") as file:
-    for line in file:
-        line = line.strip().split(" ")[2:]
-        line = [item for item in line if item != '']
+    # Get winning nums (a) and our nums (b) in lists of int
+    # Note: k.split() turns str into list
+    a,b = [list(map(int, k.split())) for k in x.split(" | ")]
 
-        winning = set()
-        ours = set()
+    # For items in b, if item in a, then True (same as 1 in Python)
+    intersection = sum(q in a for q in b)
+    if intersection > 0:
+        total += 2 ** (intersection-1)
 
-        past_line = False
-        for i in range(len(line)):    
-            if line[i] == '|':
-                past_line = True
-                continue
-            if past_line:
-                ours.add(line[i])
-            else:
-                winning.add(line[i])
-
-        num_matches = len(winning.intersection(ours))
-        if num_matches == 0:
-            continue
-        sum += 2**(num_matches-1)
-
-print(sum)
+print(total)
